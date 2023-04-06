@@ -12,6 +12,7 @@ import StartScreen from './StartScreen.js'
 import ListScreen from './ListScreen.js'
 import { TiTick } from "react-icons/ti";
 import CompleteScreen from './CompleteScreen'
+import AnswerScreen from './AnswerScreen'
 
 const cardImage = [cardImage1, cardImage2]
 const Container = styled.div`
@@ -286,7 +287,7 @@ opacity: 0;
     font-size: 24px;
 }
 `
-function Game() {
+function Game1() {
     const [stage, setStage] = useState(0)
     const [cardRotate, setCardRotate] = useState(false)
     const [cardNum, setCardNum] = useState(0)
@@ -299,6 +300,7 @@ function Game() {
     const [complete, setComplete] = useState(false)
     const [time, setTime] = useState(0)
     const fullScreen = useFullScreenHandle()
+    const bgmPlayer = document.createElement('audio');
     useEffect(() => {
         if (cardRotate === true) {
             setAnswerActive(true)
@@ -381,17 +383,18 @@ function Game() {
         <FullScreen handle={fullScreen}>
             <Container $full={fullScreen.active}>
                 <BackgroundImage src={backgroundImage}></BackgroundImage>
-                <StartScreen reStart={reStart} stage={stage === 0} setStage={setStage} active={active} setActive={setActive} />
+                <StartScreen game={1} reStart={reStart} stage={stage === 0} setStage={setStage} active={active} setActive={setActive} />
                 <ListScreen handleComplete={handleComplete} stage={stage === 1.5} setStage={setStage} active={active} setActive={setActive} />
-                <CompleteScreen time={time} answer={answer} stage={stage === 2} setStage={setStage} active={active} setActive={setActive} />
-                <TopRight $completetrans={active === 2}><TiTick />{complete}</TopRight>
-                <TopLeft $completetrans={active === 2}>{Math.floor(time / 60)}:{Math.floor(time % 60) > 9 ? Math.floor(time % 60): '0'+Math.floor(time % 60)}</TopLeft>
-                <TopButtons $completetrans={active === 2}>
+                <CompleteScreen game={1} time={time} answer={answer} stage={stage === 2} setStage={setStage} active={active} setActive={setActive} />
+                <AnswerScreen game={1} active={stage === 3} setStage={setStage} setActive={setActive}/>
+                <TopRight $completetrans={active !== 1}><TiTick />{complete}</TopRight>
+                <TopLeft $completetrans={active !== 1}>{Math.floor(time / 60)}:{Math.floor(time % 60) > 9 ? Math.floor(time % 60): '0'+Math.floor(time % 60)}</TopLeft>
+                <TopButtons $completetrans={active !== 1}>
                     <TopButton onClick={() => handleCardChange(0)} $selectLock={selectLock}><BsFillCaretLeftFill /></TopButton>
                     <PageText>第{cardNum + 1}頁，共{text.game1.length}頁</PageText>
                     <TopButton onClick={() => handleCardChange(1)} $selectLock={selectLock}><BsFillCaretRightFill /></TopButton>
                 </TopButtons>
-                <CardsContainer $completetrans={active === 2}>
+                <CardsContainer $completetrans={active !== 1}>
                     <CardContainer1 onClick={handleRotateCard} $rotate={cardRotate} $selectLock={selectLock}>
                         <CardBackground src={cardImage[cardNum % 2]} />
                         <Text>{text.game1[cardNum][0]}</Text>
@@ -410,11 +413,11 @@ function Game() {
                 <FullScreenButton onClick={() => { fullScreen.active ? fullScreen.exit() : fullScreen.enter() }}>
                     {fullScreen.active ? <BsFullscreenExit /> : <BsArrowsFullscreen />}
                 </FullScreenButton>
-                <ListButton $active={stage !== 1 || active === 2} onClick={handleListOpen}><BsList /></ListButton>
+                <ListButton $active={stage !== 1 || active !== 1} onClick={handleListOpen}><BsList /></ListButton>
                 <CompleteButton $completetrans={active === 2 || complete !== text.game1.length} onClick={handleComplete}>提交答案</CompleteButton>
             </Container>
         </FullScreen>
     );
 }
 
-export default Game;
+export default Game1;

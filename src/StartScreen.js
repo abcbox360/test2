@@ -85,25 +85,28 @@ color: white;
 
 
 function StartScreen(props) {
-    const {stage, setStage, active, setActive, reStart} = props
+    const {stage, setStage, active, setActive, reStart, game} = props
     const handleStart = () => {
       reStart()
       setStage(1)
       setTimeout(()=>{setActive(1)},500)
     }
-
+    const text = {
+      1:['快閃記憶體卡','記憶單詞','使用前面有提示的圖片和背面的答案來測試自己。'],
+      2:['匹配遊戲','字母配對練習','將每個關鍵字拖放到其定義旁邊。']
+    }
   return (
     <Container $stage={stage} $active={active === 0}>
     <TopText>
-      <div>快閃記憶體卡</div>
-      <div>記憶單詞</div>
+      <div>{text[game][0]}</div>
+      <div>{text[game][1]}</div>
     </TopText>
       <StartButton onClick={handleStart}>
         <BsFillCaretRightFill/>
         <div>開始</div>
       </StartButton>
       <BottomText>
-        使用前面有提示的片和背面的答案來測試自己。
+      {text[game][2]}
       </BottomText>
     </Container>
   );

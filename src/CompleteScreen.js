@@ -66,13 +66,23 @@ border-radius: 3px;
 `
 
 function CompleteScreen(props) {
-    const { stage, setStage, active, setActive, answer, time } = props
-
+    const { stage, setStage, active, setActive, answer, time, game } = props
+    let totalScore = 0
     let score = 0
     if (stage) {
-        for (let i = 0; i < text.game1.length; i++) {
-            if (text.game1[i][2] === answer[i]) {
-                score += 1
+        if (game === 1) {
+            totalScore =  text.game1.length
+            for (let i = 0; i < text.game1.length; i++) {
+                if (text.game1[i][2] === answer[i]) {
+                    score++
+                }
+            }
+        }else if (game === 2){
+            totalScore = text.game2.length
+            for (let i = 2; i < answer.length; i++) {
+                if(text.game2[i-2][0] === answer[i].text[0]) {
+                    score++
+                }
             }
         }
     }
@@ -90,6 +100,7 @@ function CompleteScreen(props) {
             timeText = '0'+ time + 's'
         }
     }
+    
     return (
         <Container $stage={stage} $active={active === 2} >
             <CompleteWindow>
@@ -97,14 +108,14 @@ function CompleteScreen(props) {
                 <Statistics>
                     <Score>
                         <div>得分</div>
-                        <div>{score}/{text.game1.length}</div>
+                        <div>{score}/{totalScore}</div>
                     </Score>
                     <Score>
                         <div>時間</div>
                         <div>{timeText}</div>
                     </Score>
                 </Statistics>
-                <Button>顯示答案</Button>
+                <Button onClick={() => { setStage(3); setActive(3) }}>顯示答案</Button>
                 <Button onClick={() => { setStage(0); setActive(0) }}>重新開始</Button>
             </CompleteWindow>
         </Container>
