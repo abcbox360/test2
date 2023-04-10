@@ -84,6 +84,9 @@ function CompleteScreen(props) {
                     score++
                 }
             }
+        }else if(game === 3){
+            score = answer
+            totalScore = text.game3.length
         }
     }
     let timeText
